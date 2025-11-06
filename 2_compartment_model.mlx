@@ -1,0 +1,39 @@
+%Parameters
+Blood_Fat_Exchange = input("What is the coefficient of exchange between blood and fat?");
+Blood_Reaction_Exchange = input("What is the coefficient of exchange between blood and the reaction site?");
+Blood_Losses = input("What is the concentration lost from the blood?");
+Reaction_Losses = input("What is the concentration consumed at the reaction site?");
+
+%Matrix for the derivatives
+Derivative_matrix = [-( Blood_Losses +  Blood_Fat_Exchange ), Blood_Fat_Exchange;
+    Blood_Fat_Exchange, -(Blood_Fat_Exchange)];
+
+%initialization values
+Inital_Value = input("What is the original concentration?");
+End_Time = input("What is the end time for the simulation in hours?");
+Divisons = input("How many divisions for the time interval?");
+Initial_Value = str2double(Inital_Value);
+
+%3 component vector of the three concentrations
+Concentrations=@(t) Derivative_matrix*[Initial_Value, 0]; %initial value is only in the blood.
+
+%Runge-Kutta Method Loop
+function [EM_concentration, EM_concentration_change, time] = Runge-Kutta_Loop (Derivative_matrix, Initial_Value, End_Time, Divisons)
+    dt = floor(End_Time/Divisons);
+    time = 0:dt:End_Time;
+    SOL = NaN(2,length(time));
+    SOL(:,1) = [Initial_Value, 0];
+    h = floor(End_Time/Divisions);
+    TimeStep = linspace(0, End_Time, Divisions+1);
+    for n = 1:Divisions
+        k1 = f(SOL(:,n));
+        k2 = f(SOL(:,n) + 0.5*h*k1);
+        k3 = f(SOL(:,n) + 0.5*h*k2);
+        k4 = f(SOL(:,n) + h*k3);
+        SOL(:,n+1) = SOL(:,n) + (h/6)*(k1 + 2*k2 + 2*k3 + k4);
+    end
+
+    plot(TimeStep, SOL(1,:), TimeStep, SOL(2,:));
+        legend("Bloodstream","Storage"); xlabel('Time (t, Hours)'); ylabel('Concentration (mg/kg'); grid on;
+        title('Runge-Kutta method approximation of two comparment concentrations with N = ' + string(Divisions));
+end
