@@ -1,4 +1,4 @@
-%Parameters
+%Parameters - CHange Me!
 Digestion_Blood_Exchange = 0.475;
 Digestion_Losses = 0.6;
 Blood_Fat_Exchange = 0.195;
@@ -7,8 +7,8 @@ Blood_Losses = 0.0875;
 Reaction_Losses = 0.07;
 %initial Value Problem
 Initial_Value = 0.5;
-End_Time = 20;
-Time_Divisions = 400;
+End_Time = 20; %Time of simulation - change as needed!
+Time_Divisions = 400; %I found that 20* whatever you had as End Time was best
 
 outdir = "Simulation_Results";
 if ~exist(outdir, 'dir')
