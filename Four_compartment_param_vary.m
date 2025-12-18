@@ -1,10 +1,11 @@
-%Parameters - CHange Me!
-Digestion_Blood_Exchange = 0.475;
-Digestion_Losses = 0.6;
-Blood_Fat_Exchange = 0.195;
-Blood_Reaction_Exchange = 0.085;
-Blood_Losses = 0.0875;
-Reaction_Losses = 0.07;
+%Parameters - Change Me!
+%Please Note, It is best to only vary one parameter at a time, if you would like to have a reasonable runtime and number of graphs.
+Digestion_Blood_Exchange = [0.475]; %change to a matrix as needed
+Digestion_Losses = [0.6];
+Blood_Fat_Exchange = [0.195];
+Blood_Reaction_Exchange = [0.085];
+Blood_Losses = [0.0875];
+Reaction_Losses = [0.07];
 %initial Value Problem
 Initial_Value = 0.5;
 End_Time = 20; %Time of simulation - change as needed!
