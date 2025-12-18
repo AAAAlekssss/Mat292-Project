@@ -5,26 +5,10 @@ Blood_Fat_Exchange = 0.195;
 Blood_Reaction_Exchange = 0.085;
 Blood_Losses = 0.0875;
 Reaction_Losses = 0.07;
-%parameters tested by seeng what made sense based on literature values
+%parameters tested by seeng what made sense based on literature values - If you need to change these Please use the Param Vary version, then input here
 %initial Value Problem
 End_Time = 32;
 Time_Divisions = 640;
-Mass_body = 76; %in kg - variable dependent on patient mass (other factors are variable too)
-%note that it is in a different format to the rest of the mass variables as 
-%to ensure it is well differentiated.
-fat_percent = 14;
-digestive_percent = 8;
-target_percent = 1;
-blood_percent = 8;
-Digestive_Mass = digestive_percent/100*Mass_body;
-Target_Mass = target_percent/100*Mass_body;
-Fat_Mass = fat_percent/100*Mass_body;
-Blood_Mass = blood_percent/100*Mass_body;
-%remainder of body - muscles, bones, etc - is assumed to have no effect nor storage capacity.
-Initial_Amount = 10; %mg
-%convert to initial concentration as to begin reaction
-Initial_Concentration = Initial_Amount/Digestive_Mass; %mg/kg
-
 outdir = "Simulation_Results";
 if ~exist(outdir, 'dir')
     mkdir(outdir);
@@ -33,6 +17,25 @@ end
 
 Filename = fullfile(outdir, "Mass_.pdf"); 
 firstPage = true;
+%%
+%[text] ## Mass Inputs (EDIT HERE!)
+Mass_body = 76; %in kg - variable dependent on patient mass (other factors are variable too)
+%note that it is in a different format to the rest of the mass variables as 
+%to ensure it is well differentiated.
+fat_percent = 14;
+digestive_percent = 8;
+target_percent = 1;
+blood_percent = 8;
+Initial_Amount = 10; %mg
+%do not change anything after this
+Digestive_Mass = digestive_percent/100*Mass_body;
+Target_Mass = target_percent/100*Mass_body;
+Fat_Mass = fat_percent/100*Mass_body;
+Blood_Mass = blood_percent/100*Mass_body;
+%remainder of body - muscles, bones, etc - is assumed to have no effect nor storage capacity.
+%convert to initial concentration as to begin reaction
+Initial_Concentration = Initial_Amount/Digestive_Mass; %mg/kg
+
 %%
 %[text] ## Create Graph
 % Derivative Matrix
