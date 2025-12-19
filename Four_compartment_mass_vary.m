@@ -17,56 +17,68 @@ end
 
 Filename = fullfile(outdir, "Mass_.pdf"); 
 firstPage = true;
-%%
-%[text] ## Mass Inputs (EDIT HERE!)
-Mass_body = 76; %in kg - variable dependent on patient mass (other factors are variable too)
+
+Mass Inputs (EDIT HERE!)
+Mass_body = [56,66,76]; %in kg - variable dependent on patient mass (other factors are variable too)
 %note that it is in a different format to the rest of the mass variables as 
 %to ensure it is well differentiated.
-fat_percent = 14;
-digestive_percent = 8;
-target_percent = 1;
-blood_percent = 8;
-Initial_Amount = 10; %mg
+%can set ranges as needed
+fat_percent = [14,15];
+digestive_percent = [8,10];
+target_percent = [1];
+blood_percent = [8];
+Initial_Amount = [10,15,20]; %mg
 %do not change anything after this
-Digestive_Mass = digestive_percent/100*Mass_body;
-Target_Mass = target_percent/100*Mass_body;
-Fat_Mass = fat_percent/100*Mass_body;
-Blood_Mass = blood_percent/100*Mass_body;
-%remainder of body - muscles, bones, etc - is assumed to have no effect nor storage capacity.
-%convert to initial concentration as to begin reaction
-Initial_Concentration = Initial_Amount/Digestive_Mass; %mg/kg
 
-%%
-%[text] ## Create Graph
-% Derivative Matrix
-Derivative_matrix = [-(db+dl), 0, 0,0;
-    db, -(bl + bf + br),  bf,br;
-     0, bf, -bf, 0;
-     0, br,   0, -(br + rl)];
-% RK Solver Fcn
-[SOL, TimeStep] = Runge_Kutta_4_Loop(Derivative_matrix, Initial_Concentration, End_Time, Time_Divisions);
-figure;
-%return to mass from concentrations
-SOL(1,:) = Digestive_Mass .* SOL(1,:);
-SOL(2,:) = Blood_Mass .* SOL(2,:);
-SOL(3,:) = Fat_Mass .* SOL(3,:);
-SOL(4,:) = Target_Mass .* SOL(4,:);
-%plotting graphs
-plot(TimeStep, SOL(1,:), TimeStep, SOL(2,:), TimeStep, SOL(3,:), TimeStep, SOL(4,:), TimeStep, (SOL(2,:)+SOL(3,:)+SOL(4,:)));
-    legend("Digestion","Bloodstream","Storage","Target", "Body Total"); 
-    xlabel('Time (t, Hours)'); ylabel('mg of medication in each body system'); grid on;
-    title(sprintf('Runge-Kutta method approximation of four comparment concentrations with N = %d', Time_Divisions));
-%File management shenanigans to make one neat graph
-subtitle(sprintf('DB=%.3f, DL=%.3f, BF=%.3f, BR=%.3f, BL=%.4f, RL=%.3f', db, dl, bf, br, bl, rl));
-if firstPage
-    exportgraphics(gcf, Filename, "Append", false);
-    firstPage = false;
-else
-    exportgraphics(gcf, Filename, "Append", true);
+
+Create Graph and run iterations
+for mb = Mass_body
+    for fp = fat_percent
+        for dp = digestive_percent
+            for tp = target_percent
+                for bp = blood_percent
+                    for ia = Initial_Amount
+                        Digestive_Mass = dp/100*mb;
+                        Target_Mass = tp/100*mb;
+                        Fat_Mass = fp/100*mb;
+                        Blood_Mass = bp/100*mb;
+                        %remainder of body - muscles, bones, etc - is assumed to have no effect nor storage capacity.
+                        %convert to initial concentration as to begin reaction
+                        Initial_Concentration = ia/Digestive_Mass; %mg/kg
+                        % Derivative Matrix
+                        Derivative_matrix = [-(db+dl), 0, 0,0;
+                            db, -(bl + bf + br),  bf,br;
+                             0, bf, -bf, 0;
+                             0, br,   0, -(br + rl)];
+                        % RK Solver Fcn
+                        [SOL, TimeStep] = Runge_Kutta_4_Loop(Derivative_matrix, Initial_Concentration, End_Time, Time_Divisions);
+                        figure;
+                        %return to mass from concentrations
+                        SOL(1,:) = Digestive_Mass .* SOL(1,:);
+                        SOL(2,:) = Blood_Mass .* SOL(2,:);
+                        SOL(3,:) = Fat_Mass .* SOL(3,:);
+                        SOL(4,:) = Target_Mass .* SOL(4,:);
+                        %plotting graphs
+                        plot(TimeStep, SOL(1,:), TimeStep, SOL(2,:), TimeStep, SOL(3,:), TimeStep, SOL(4,:), TimeStep, (SOL(2,:)+SOL(3,:)+SOL(4,:)));
+                            legend("Digestion","Bloodstream","Storage","Target", "Body Total"); 
+                            xlabel('Time (t, Hours)'); ylabel('mg of medication in each body system'); grid on;
+                            title(sprintf('Runge-Kutta approximation of four comparment mg of medication with N = %d', Time_Divisions));
+                        %File management shenanigans to make one neat graph
+                        subtitle(sprintf('BM=%.3f, FP=%.3f, DP=%.3f, TP=%.3f, BP=%.4f, IA=%.3f', bm, fp, dp, tp, bp, ia));
+                        if firstPage
+                            exportgraphics(gcf, Filename, "Append", false);
+                            firstPage = false;
+                        else
+                            exportgraphics(gcf, Filename, "Append", true);
+                        end
+                        
+                        close(gcf);
+                    end
+                end
+            end
+        end
+    end
 end
-
-close(gcf);
-
 %[appendix]{"version":"1.0"}
 %---
 %[metadata:view]
