@@ -64,7 +64,7 @@ for mb = Mass_body
                             xlabel('Time (t, Hours)'); ylabel('mg of medication in each body system'); grid on;
                             title(sprintf('Runge-Kutta approximation of four comparment mg of medication with N = %d', Time_Divisions));
                         %File management shenanigans to make one neat graph
-                        subtitle(sprintf('BM=%.3f, FP=%.3f, DP=%.3f, TP=%.3f, BP=%.4f, IA=%.3f', bm, fp, dp, tp, bp, ia));
+                        subtitle(sprintf('BM=%.3f, FP=%.3f, DP=%.3f, TP=%.3f, BP=%.4f, IA=%.3f', mb, fp, dp, tp, bp, ia));
                         if firstPage
                             exportgraphics(gcf, Filename, "Append", false);
                             firstPage = false;
