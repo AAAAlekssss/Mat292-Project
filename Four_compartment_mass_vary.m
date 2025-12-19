@@ -46,10 +46,10 @@ for mb = Mass_body
                         %convert to initial concentration as to begin reaction
                         Initial_Concentration = ia/Digestive_Mass; %mg/kg
                         % Derivative Matrix
-                        Derivative_matrix = [-(db+dl), 0, 0,0;
-                            db, -(bl + bf + br),  bf,br;
-                             0, bf, -bf, 0;
-                             0, br,   0, -(br + rl)];
+                        Derivative_matrix = [-(Digestion_Blood_Exchange+Digestion_Losses), 0, 0,0;
+                            Digestion_Blood_Exchange, -(Blood_Losses + Blood_Fat_Exchange + Blood_Reaction_Exchange),  Blood_Fat_Exchange,Blood_Reaction_Exchange;
+                             0, Blood_Fat_Exchange, -Blood_Fat_Exchange, 0;
+                             0, Blood_Reaction_Exchange,   0, -(Blood_Reaction_Exchange + Reaction_Losses)];
                         % RK Solver Fcn
                         [SOL, TimeStep] = Runge_Kutta_4_Loop(Derivative_matrix, Initial_Concentration, End_Time, Time_Divisions);
                         figure;
